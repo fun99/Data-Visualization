@@ -2,6 +2,7 @@
     <div class="content">
        <div class="content-header"></div>
        <div class="content-center">
+               <!-- 左侧 -->
                <section class="contenCenterLeft">
                   <!-- 概览区域模块制作 -->
                   <div class="left-data panel">
@@ -63,8 +64,8 @@
                         <div class="pieTu">
                            <h3>点位分布统计</h3>
                            <div class="center">
-                               <section class="center-left">
-                                  99
+                               <section class="center-left" ref="pieTu">
+                                  
                                </section>
                                <section class="center-right">
                                   <div class="center-right-one">
@@ -80,12 +81,44 @@
                         </div>
                    </div>
                </section>
-               <section class="contentCenterCen">2</section>
+               <!-- 中间 -->
+               <section class="contentCenterCen">
+                  <div class="contentCenterCen-top">
+                     <div class="title">
+                        <span><i class="icon-dell"></i>数据设备统计</span>
+                     </div>
+                     <div ref="ball" class="ball" style="height:100%"></div>
+                  </div>
+                  <div class="contentCenterCen-bottom panel">
+                      <div class="text">
+                         <div class="title-bottom">
+                        <span>全国用户总量统计</span>    
+                      </div>   
+                      <div class="center">
+                         <div class="bar" ref="bar"></div>
+                         <div class="bar-right">
+                             <section>
+                                <span>99</span>
+                                <span><i style="background-color:#f75934"></i>用户总量</span>
+                             </section>
+                             <section>
+                                <span>99</span>
+                                <span><i style="background-color:#ecc919"></i>本月新增</span>
+                             </section>
+                         </div>
+                      </div>
+                      </div>
+                  </div>
+               </section>
+               <!-- 右侧 -->
                <section class="contentCenterright">3</section>
        </div>
     </div> 
 </template>
 <script>
+// * 所有 将echarts中全部以对象方式导入到echarts中
+import * as echarts from 'echarts'
+import 'echarts-gl';
 export default {
    data() {
       return {
@@ -188,12 +221,162 @@ export default {
          }]
       }
    },
-   created(){
-   },
-   computed:{
+   mounted(){
+      this.pie(),  // pie
+      this.ball(),  // ball
+      this.bar()
    },
    methods:{
-   },
+     pie(){
+        let myChart = echarts.init(this.$refs.pieTu)
+      var option;
+      option = {
+         tooltip: {
+         trigger: 'item',
+         formatter: '{a} <br/>{b} : {c} ({d}%)'
+       },
+      //  颜色
+       color:['#006cff','#60cda0','#ed8884','#ff9f7f','#0096ff','#9fe6b8','#32c5e9','#1d9dff'],
+  series: [
+    {
+      name: '点图分布',
+      type: 'pie',
+      radius: ["10%", "100%"],
+      center: ['50%', '55%'],
+      roseType: 'radius',
+      data: [
+        { value: 40, name: '北京' },
+        { value: 38, name: '上海' },
+        { value: 32, name: '深圳' },
+        { value: 30, name: '广州' },
+        { value: 28, name: '杭州' },
+        { value: 26, name: '武汉' },
+        { value: 22, name: '天津' },
+        { value: 18, name: '南京' }
+      ],
+      labelLine:{
+       length:6, 
+       length2:8
+    },
+    label:{
+      fontSize:10,
+      color:'#fff'
+    }
+    }
+  ]
+};
+option && myChart.setOption(option);
+window.addEventListener('resize',function(){
+   myChart.resize()
+})
+     },
+     ball(){
+      let ROOT_PATH ='https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples';
+      let myChart = echarts.init(this.$refs.ball);
+      let option;
+      option = {
+         backgroundColor: '#000',
+         globe: {
+            baseTexture: ROOT_PATH + '/data-gl/asset/earth.jpg',
+            shading: 'lambert',
+            environment: ROOT_PATH + '/data-gl/asset/starfield.jpg',
+            atmosphere: {
+               show: true
+            },
+            light: {
+               ambient: {
+               intensity: 0.1
+               },
+               main: {
+               intensity: 1.5
+               }
+            }
+         },
+         series: []
+         };
+         option && myChart.setOption(option);
+
+     },
+     bar(){
+       let myChart = echarts.init(this.$refs.bar)
+       let option = {
+          color:{
+           type:'linear',
+           x:0,
+           y:0,
+           x2:0,
+           y2:1,
+          colorStops:[{
+               offset:0,color:'red',//0%开始的颜色
+            },{
+               offset:1,color:'blue',//100%结束颜色
+            }],    
+            globalCoord:false  // 缺省为false
+          },
+         tooltip: {
+            trigger: 'item',
+         },
+         grid: {
+            left: '0%',
+            right: '3%',
+            bottom: '3%',
+            containLabel: true,
+            height:110,
+            show:true,
+            borderColor:'rgba(0,240,255,.3)'
+         },
+         xAxis: [
+            {
+               type: 'category',
+               data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+               axisTick: {
+               alignWithLabel: false,
+               show:false,
+               },
+               axisLabel:{
+                  color:'#4c9bfd'
+               },
+               axisLine:{
+                  lineStyle:{
+                     color:'rgba(0,240,255,.3)'
+                  }
+               }
+            }
+         ],
+         yAxis: [
+            {
+             type: 'value',
+             axisTick: {
+               alignWithLabel: false,
+               show:false,
+               },
+               axisLabel:{
+                  color:'#4c9bfd'
+               },
+               axisLine:{
+                  lineStyle:{
+                     color:'rgba(0,240,255,.3)'
+                  }
+               },
+               splitLine:{
+                  lineStyle:{
+                     color:'rgba(0,240,255,.3)'
+                  }
+               }
+            }
+         ],
+         series: [
+            {
+               name: 'Direct',
+               type: 'bar',
+               barWidth: '60%',
+               data: [10, 52, 200, 334, 390, 330, 220],
+            },
+         ]
+         };
+         option && myChart.setOption(option);
+     }
+   }
 }
 </script>
 <style scoped>
@@ -340,26 +523,25 @@ export default {
     }
     .content-center .contenCenterLeft .center{
        display: flex;
-       color: pink;
        height: 125px;
        width: 360px;
        margin-top: -6px;
     }
     .content-center .contenCenterLeft .center .center-left{
-       /* padding-right: 80px; */
-       background: pink;
-       width: 1000px;
+       margin-left: -30px;
     }
     .content-center .contenCenterLeft .center .center-right{
        margin-left: 20px;
-       width: px !important; 
+       margin-right: 20px;
+       padding: 020px;
+       flex: 1;
        display: flex;
        flex-direction: column;
        justify-content: space-around;
        align-items: center;
-       background: blue;
-       /* background: url('../assets/images/rect.png') no-repeat; */
-       /* background-size: 100% 100%; */
+       /* background: blue; */
+       background: url('../assets/images/rect.png') no-repeat;
+       background-size: 100% 100%;
     }
     .content-center .contenCenterLeft .center .center-right .center-right-one{
        display: flex;
@@ -377,4 +559,73 @@ export default {
        position: relative;
        top: 1px;
     }
+    /* 中间样式 */
+     .contentCenterCen .contentCenterCen-top {
+        border: 1px solid transparent;
+        height: 375px;
+        margin: 0 15px;
+     }
+     .contentCenterCen .contentCenterCen-top .title{
+        font-size: 15px;
+        color: #fff;
+        margin: 2px 0 10px 10px;
+     }
+     .contentCenterCen .contentCenterCen-top .title span i {
+        position: relative;
+        top: 1px;
+        right: 5px;
+        color: #fff;
+     }
+    .contentCenterCen .contentCenterCen-bottom {
+       height: 120px;
+       margin-top:50px;
+       margin-left:20px;
+       margin-right:20px;
+       color:#fff;
+       font-size: 15px;
+    }
+    .contentCenterCen .contentCenterCen-bottom .text{
+       position: absolute;
+       top:-35px;
+       left:-95px;
+       right: -38px;
+       bottom: -20px;
+    }
+    .contentCenterCen .contentCenterCen-bottom .text .center{
+       display: flex;
+    }
+   .contentCenterCen .contentCenterCen-bottom .text .center .bar {
+      margin-top: 3px;
+      width: 370px;
+      height: 130px;
+   }
+  .contentCenterCen .contentCenterCen-bottom .text .center .bar-right{
+     width: 120px;
+     margin-top: 3px;
+     margin-left: 20px;
+     background: url('../assets/images/rect.png') no-repeat;
+     background-size: 100% 100%;
+     display: flex;
+     flex-direction: column;
+     justify-content:space-around;
+     align-items: center;
+  }
+  .contentCenterCen .contentCenterCen-bottom .text .center .bar-right section{
+     display: flex;
+     flex-direction: column;
+     justify-content: space-around;
+     align-items: center;
+  }
+  .contentCenterCen .contentCenterCen-bottom .text .center .bar-right section span:nth-of-type(2){
+     font-size: 12px;
+  }
+  .contentCenterCen .contentCenterCen-bottom .text .center .bar-right section span:nth-of-type(2) i{
+     width:5px;
+     height: 12px;
+     border-radius: 2px;
+     display: inline-block;
+     position: relative;
+     top:1px;
+     right: 5px;
+     }
 </style>
