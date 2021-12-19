@@ -1,0 +1,10 @@
+@import './icon/style.css';
+.panel{
+        position: relative;
+        border: 15px solid transparent;
+        border-width: 51px 38px 20px 132px;
+        border-image-source: url('~@/assets/images/border.png');
+        border-image-slice: 51 38 20 132;
+        margin-left: 52px;
+        margin-bottom: 20px;
+}
