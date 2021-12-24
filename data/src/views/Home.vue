@@ -111,7 +111,22 @@
                   </div>
                </section>
                <!-- 右侧 -->
-               <section class="contentCenterright">3</section>
+               <section class="contentCenterright">
+                   <div class="contentcen-top panel">
+                       <div class="centent">  
+                           <ul>
+                              <li v-for="(item,index) in rightList" :key="index">
+                                 <div class="top">{{item.day}}</div>
+                                 <div class="center" v-if="index===0">
+                                    <span>{{item.num}}</span>
+                                    <span>{{item.num1}}</span>
+                                 </div>
+                              </li>
+
+                           </ul>
+                       </div>
+                   </div>
+               </section>
        </div>
     </div> 
 </template>
@@ -218,7 +233,37 @@ export default {
             data:'2019-10-10',
             centent:'襄阳市数据可视化平台全市几乎都在使用用的比例很大',
             number:10000000003
-         }]
+         }],
+         rightList:[
+            {
+             day:'365',
+             num:666,
+             num1:777,
+             text1:'订单量',
+             text2:'销售额(万元)'  
+            },
+            {
+             day:'365',
+             num:666,
+             num1:777,
+             text1:'订单量',
+             text2:'销售额(万元)'
+            },
+            {
+             day:'365',
+             num:666,
+             num1:777,
+             text1:'订单量',
+             text2:'销售额(万元)'
+            },
+            {
+             day:'365',
+             num:666,
+             num1:777,
+             text1:'订单量',
+             text2:'销售额(万元)'
+            },
+         ]
       }
    },
    mounted(){
@@ -241,8 +286,8 @@ export default {
     {
       name: '点图分布',
       type: 'pie',
-      radius: ["10%", "100%"],
-      center: ['50%', '55%'],
+      radius: ["10%", "60%"],
+      center: ['50%', '50%'],
       roseType: 'radius',
       data: [
         { value: 40, name: '北京' },
@@ -298,6 +343,22 @@ window.addEventListener('resize',function(){
 
      },
      bar(){
+        let item = {
+             // 在data中放对象是对当前柱子值设置样式或别的
+                          value:1200, // 设置单个数据项的数值,
+                          itemStyle:{  // 修改单个柱子样式
+                              color:'#254065'
+                          },
+                          emphasis:{  // 不让高亮显示属性   
+                              itemStyle:{
+                                  color:'inherit'  // 不让高亮显示   //  设置的颜色值跟当前单个柱子样式一样可也以#254065
+                              }
+                          },
+                          tooltip:{
+                        extraCssText :'opacity:0'  // 取消当前项提示框  因为没有show这个属性 使用opacity透明度来设置0-1 0一点看不到 1显示看到
+                        
+                      }
+        }
        let myChart = echarts.init(this.$refs.bar)
        let option = {
           color:{
@@ -318,17 +379,18 @@ window.addEventListener('resize',function(){
          },
          grid: {
             left: '0%',
-            right: '3%',
-            bottom: '3%',
+            right: '22%',
+            bottom: '0%',
             containLabel: true,
-            height:110,
+            height:90,
+            width:260,
             show:true,
             borderColor:'rgba(0,240,255,.3)'
          },
          xAxis: [
             {
                type: 'category',
-               data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+               data: ['上海', '广州', '北京', '深圳', '合肥', '', '......', '', '杭州', '厦门', '济南', '成都', '重庆'],
                axisTick: {
                alignWithLabel: false,
                show:false,
@@ -370,7 +432,7 @@ window.addEventListener('resize',function(){
                name: 'Direct',
                type: 'bar',
                barWidth: '60%',
-               data: [10, 52, 200, 334, 390, 330, 220],
+               data: [2100,1900,1700,1560,1400,item,item,item,900,750,600,480,240],
             },
          ]
          };
@@ -489,17 +551,22 @@ window.addEventListener('resize',function(){
      }
      .content-center .contenCenterLeft .monitoring-center .monitoring-bottom .hover ul li:hover{
         background:#181920;
-        margin-right: 29px;
+        width: 287px;
+     }
+     .content-center .contenCenterLeft .monitoring-center .monitoring-bottom .hover ul li span:nth-of-type(1){
+        overflow: hidden;
+        width: 90px;
+        padding-left: -10px;
      }
      .content-center .contenCenterLeft .monitoring-center .monitoring-bottom .hover ul li span:nth-of-type(2){
         overflow: hidden;
         width: 120px;
         white-space:nowrap;
         text-overflow:ellipsis;
-        margin-left: 43px;
+        margin-left: -10px;
      }
      .content-center .contenCenterLeft .monitoring-center .monitoring-bottom .hover ul li span:nth-of-type(3){
-        margin-left: 26px
+        margin-left: 6px
      }
      @keyframes move{
         100%{
@@ -507,7 +574,7 @@ window.addEventListener('resize',function(){
         }
      }
     .content-center .contenCenterLeft .pie{
-       height: 122px;
+       height: 90px;
     }
     .content-center .contenCenterLeft .pieTu{
        position: absolute;
@@ -523,18 +590,19 @@ window.addEventListener('resize',function(){
     }
     .content-center .contenCenterLeft .center{
        display: flex;
-       height: 125px;
+       height: 100px;
        width: 360px;
        margin-top: -6px;
     }
     .content-center .contenCenterLeft .center .center-left{
        margin-left: -30px;
+       width: 230px;
     }
     .content-center .contenCenterLeft .center .center-right{
-       margin-left: 20px;
-       margin-right: 20px;
-       padding: 020px;
-       flex: 1;
+       margin-right: 70px;
+       padding: 15px;
+       /* width: 10px; */
+       flex:1;
        display: flex;
        flex-direction: column;
        justify-content: space-around;
@@ -550,7 +618,7 @@ window.addEventListener('resize',function(){
        align-items: center;
     }
     .content-center .contenCenterLeft .center .center-right .center-right-one span:nth-of-type(2) i {
-       width: 5px;
+       width: 5px; 
        height: 12px;
        display: inline-block;
        border-radius: 2px;
@@ -577,7 +645,7 @@ window.addEventListener('resize',function(){
         color: #fff;
      }
     .contentCenterCen .contentCenterCen-bottom {
-       height: 120px;
+       height: 90px;
        margin-top:50px;
        margin-left:20px;
        margin-right:20px;
@@ -597,12 +665,12 @@ window.addEventListener('resize',function(){
    .contentCenterCen .contentCenterCen-bottom .text .center .bar {
       margin-top: 3px;
       width: 370px;
-      height: 130px;
+      height: 100px;
    }
   .contentCenterCen .contentCenterCen-bottom .text .center .bar-right{
-     width: 120px;
+     width: 103px;
      margin-top: 3px;
-     margin-left: 20px;
+     margin-left: -87px;
      background: url('../assets/images/rect.png') no-repeat;
      background-size: 100% 100%;
      display: flex;
@@ -627,5 +695,36 @@ window.addEventListener('resize',function(){
      position: relative;
      top:1px;
      right: 5px;
+     }
+     /* 右侧内容 */
+     .content-center .contentCenterright .contentcen-top {
+        position: relative;
+        right: 12px;
+        height: 50px;
+     }
+     .content-center .contentCenterright .contentcen-top .centent{
+        position: absolute;
+        top:-51px;
+        right: -38px;
+        bottom:-20px;
+        left: -132px;
+     }
+     .content-center .contentCenterright .contentcen-top ul {
+        list-style: none;
+        margin: 0;
+        padding: 20px 0 0 20px;
+        display: flex;
+     }
+     .content-center .contentCenterright .contentcen-top ul li{
+        /* display: flex; */
+        color: #414874;
+        flex: 1;
+     }
+     .content-center .contentCenterright .contentcen-top ul li .top{
+        border-right: 2px solid #4fb5c8;
+        text-align: center;
+     }
+     .content-center .contentCenterright .contentcen-top ul li:nth-child(4){
+        border-right: none;
      }
 </style>
