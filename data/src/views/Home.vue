@@ -116,14 +116,21 @@
                        <div class="centent">  
                            <ul>
                               <li v-for="(item,index) in rightList" :key="index">
-                                 <div class="top">{{item.day}}</div>
-                                 <div class="center" v-if="index===0">
-                                    <span>{{item.num}}</span>
-                                    <span>{{item.num1}}</span>
-                                 </div>
+                                 <div :class="{activeColor:index===number}" class="top">{{index!==3?item.day+'天':item.day+'时'}}</div>
                               </li>
-
                            </ul>
+                           <div class="center" v-for="(item,index) in centerList" :key="index">
+                                 <div class="center-txt" v-if="index===number" :class="{activeColor:index===number}">
+                                     <span>{{item.num}}</span>
+                                     <span>{{item.num1}}</span>
+                                 </div>   
+                          </div>
+                          <div class="bottom" v-for="(item,index) in bottomList" :key="index"> 
+                             <div class="bottom-text" v-if="index===number" :class="{activeColor:index===number}">
+                                <span><i></i>{{item.text1}}</span>
+                                <span><i></i>{{item.text2}}</span>
+                             </div>
+                          </div>
                        </div>
                    </div>
                </section>
@@ -138,6 +145,7 @@ export default {
    data() {
       return {
          num:0,
+         number:0,
          list1:[{
             data:'2019-09-09',
             centent:'武汉市数据可视化平台全市几乎都在使用用的比例很大',
@@ -235,41 +243,57 @@ export default {
             number:10000000003
          }],
          rightList:[
-            {
-             day:'365',
-             num:666,
-             num1:777,
-             text1:'订单量',
-             text2:'销售额(万元)'  
-            },
-            {
-             day:'365',
-             num:666,
-             num1:777,
-             text1:'订单量',
-             text2:'销售额(万元)'
-            },
-            {
-             day:'365',
-             num:666,
-             num1:777,
-             text1:'订单量',
-             text2:'销售额(万元)'
-            },
-            {
-             day:'365',
-             num:666,
-             num1:777,
-             text1:'订单量',
-             text2:'销售额(万元)'
-            },
-         ]
+           {day:365},
+           {day:90},
+           {day:30},
+           {day:24},
+         ],
+        centerList:[
+         {
+          num:666,
+          num1:777,
+         },
+         {
+          num:888,
+          num1:999,
+         },
+         {
+          num:111,
+          num1:222,
+         },
+         {
+          num:456,
+          num1:789,
+         }
+        ],
+        bottomList:[
+           {
+              text1:'订单量',
+              text2:'销售额(万元)'
+           },
+           {
+              text1:'订单量',
+              text2:'销售额(万元)'
+           },
+           {
+              text1:'订单量',
+              text2:'销售额(万元)'
+           },
+           {
+              text1:'订单量',
+              text2:'销售额(万元)'
+           }
+        ]  
       }
    },
    mounted(){
       this.pie(),  // pie
       this.ball(),  // ball
       this.bar()
+      this.full()
+   },
+   computed:{
+      
    },
    methods:{
      pie(){
@@ -437,7 +461,13 @@ window.addEventListener('resize',function(){
          ]
          };
          option && myChart.setOption(option);
-     }
+     },
+     full(){
+        setInterval(()=>{
+                if(this.number===3) return this.number = 0
+                this.number++
+         },1500)
+      }
    }
 }
 </script>
@@ -716,7 +746,6 @@ window.addEventListener('resize',function(){
         display: flex;
      }
      .content-center .contentCenterright .contentcen-top ul li{
-        /* display: flex; */
         color: #414874;
         flex: 1;
      }
@@ -724,7 +753,51 @@ window.addEventListener('resize',function(){
         border-right: 2px solid #4fb5c8;
         text-align: center;
      }
-     .content-center .contentCenterright .contentcen-top ul li:nth-child(4){
-        border-right: none;
-     }
+    .content-center .contentCenterright .contentcen-top .centent .center{
+        margin-top: 10px;
+        margin-left: 40px;
+    }
+    .content-center .contentCenterright .contentcen-top .centent .center .center-txt{
+        position: absolute;
+        color: #414874;
+    }
+    .content-center .contentCenterright .contentcen-top .centent .center span:nth-of-type(1){
+        margin-right: 220px
+    }
+    .content-center .contentCenterright .contentcen-top .centent .bottom{
+       position:relative
+    }
+    .content-center .contentCenterright .contentcen-top .centent .bottom-text{
+       position: absolute;
+       top: 27px;
+       left: 40px;
+       color: #414874;
+       font-size: 12px;
+    }
+    .content-center .contentCenterright .contentcen-top .centent .bottom-text span:nth-of-type(1){
+       margin-right: 173px;
+    }
+    .activeColor{
+       color: #fff !important;
+    }
+    .content-center .contentCenterright .contentcen-top .centent .bottom-text span:nth-of-type(1) i{
+       display: inline-block;
+       position: relative;
+       top: 2px;
+       right: 2px;
+       width: 5px;
+       height: 12px;
+       border-radius: 2px;
+       background: #f5563e;
+    }
+    .content-center .contentCenterright .contentcen-top .centent .bottom-text span:nth-of-type(2) i{
+       display: inline-block;
+       position: relative;
+       top: 2px;
+       right: 2px;
+       width: 5px;
+       height: 12px;
+       border-radius: 2px;
+       background: #ecc615;
+    }
 </style>
