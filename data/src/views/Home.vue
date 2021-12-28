@@ -133,6 +133,43 @@
                           </div>
                        </div>
                    </div>
+                   <div class="content-center panel">
+                       <div class="centent">
+                          <div>
+                             <h2>销售额统计</h2>
+                          <section>
+                             <a href="#" @click="Abtn(index)" :class="{bg:index===num1}" v-for="(item,index) in aList" :key="index">{{item.name}}</a>
+                          </section>
+                          </div>
+                          <div class="text"><span>单位:万</span></div>
+                          <div class="bottom" ref="cate"></div>
+                       </div>
+                   </div> 
+                   <div class="content-wrap">
+                           <div class="wrap-left panel">
+                               <div class="wrap">
+                                   <h2>渠道分布</h2>
+                                  <section ref="aLeft"></section>
+                               </div>    
+                           </div>
+                           <div class="wrap-right panel">
+                              <div class="wrap">
+                                  <h3>统计</h3>
+                                 <section ref="bRight"></section>
+                                  <div class="abs">50%</div>
+                                  <div class="flex">
+                                     <div class="bottomLeft">
+                                        <span>99</span>
+                                        <span>销售额(万元)</span>
+                                     </div>
+                                     <div class="bottomRight">
+                                        <span>150%</span>
+                                        <span>同比增长</span>
+                                     </div>
+                                  </div>
+                              </div>
+                           </div>
+                   </div>
                </section>
        </div>
     </div> 
@@ -146,6 +183,7 @@ export default {
       return {
          num:0,
          number:0,
+         num1:0,
          list1:[{
             data:'2019-09-09',
             centent:'武汉市数据可视化平台全市几乎都在使用用的比例很大',
@@ -283,14 +321,42 @@ export default {
               text1:'订单量',
               text2:'销售额(万元)'
            }
-        ]  
+        ],
+        aList:[
+           {name:'年'},
+           {name:'季'},
+           {name:'月'},
+           {name:'周'}
+        ],
+        data:[
+       {
+      a:[24, 40, 101, 134, 90, 230, 210, 230, 120, 230, 210, 120],
+      b:[40, 64, 191, 324, 290, 330, 310, 213, 180, 200, 180, 79]
+       },
+      {
+      a:[23, 75, 12, 97, 21, 67, 98, 21, 43, 64, 76, 38],
+      b:[43, 31, 65, 23, 78, 21, 82, 64, 43, 60, 19, 34]
+      },
+      {
+      a:[34, 87, 32, 76, 98, 12, 32, 87, 39, 36, 29, 36],
+      b:[56, 43, 98, 21, 56, 87, 43, 12, 43, 54, 12, 98]
+      },
+      {
+      a:[43, 73, 62, 54, 91, 54, 84, 43, 86, 43, 54, 53],
+      b:[32, 54, 34, 87, 32, 45, 62, 68, 93, 54, 54, 24]
+      },
+       ],
       }
    },
    mounted(){
       this.pie(),  // pie
       this.ball(),  // ball
-      this.bar()
-      this.full()
+      this.bar(),  
+      this.full(),
+      this.cate(),
+      this.time(),
+      this.radar(),
+      this.pies()
    },
    computed:{
       
@@ -467,7 +533,198 @@ window.addEventListener('resize',function(){
                 if(this.number===3) return this.number = 0
                 this.number++
          },1500)
-      }
+      },
+      time(){
+         setInterval(() => {
+            if(this.num1>=3) {
+                   this.num1 = 0
+                   this.Abtn(this.num1)
+                   return 
+                }
+                this.Abtn(this.num1)
+                this.num1++ 
+         }, 1500);
+      },
+     cate(){
+       var myChart = echarts.init(this.$refs.cate)
+         var option = {
+            tooltip: {
+               trigger: 'axis'
+            },
+            legend: {
+               data: ['预期销售额', '实例销售额'],
+               textStyle:{
+                  fontSize:7,
+                  color:'#4c9bfd'
+               },
+               right:'10%'
+            },
+            grid: {
+               left: '3%',
+               right: '4%',
+               bottom: '3%',
+               top:'25%',
+               containLabel: true,
+               show:true,
+               borderColor:'#012f4a'
+            },
+            height:70,
+            xAxis: {
+               type: 'category',
+               boundaryGap: false,
+               data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月','8月','9月','10月','11月','12月'],
+                axisTick:{
+                   show:false // 去除刻度
+               },
+                axisLine:{
+                    show:false  // 去除x轴横线颜色
+                },
+                axisLabel:{
+                    fontSize:6,  // x轴文字大小
+                    color:'#4c9bfd'  // x轴文字的颜色
+                },
+                
+            },
+            yAxis: {
+               type: 'value',
+               axisTick:{
+                   show:false // 去除刻度
+               },    
+                axisLabel:{
+                   fontSize:6,
+                   color:'#4c9bfd' // y轴文字颜色
+                },
+                splitLine:{
+                    lineStyle:{
+                        color:'#012f4a' //y轴的分隔线
+                    }
+                }
+            },
+            color:['pink','orange'],
+            series: [
+               {
+                  name: '预期销售额',
+                  type: 'line',
+                  stack: 'Total',
+                  smooth:true,
+                  data: this.data[this.num1].a
+               },
+               {
+                  name: '实例销售额',
+                  type: 'line',
+                  stack: 'Total',
+                  smooth:true,
+                  data: this.data[this.num1].b
+               },
+            ]
+            };
+       myChart.setOption(option);
+     },
+     Abtn(index){
+      if(this.num1>=3) this.num1=0
+      this.num1=index
+      this.cate()
+     },
+     radar(){
+        var myChart = echarts.init(this.$refs.aLeft)
+        var option;
+      option = {
+         tooltip:{
+    show:true,  // 鼠标经过显示提示框组件 
+    position:['60%','10%'], // 修改提示框组件位置可以用百分比,也可以用数字
+  },
+      radar: {
+         indicator: [
+            { name: '机场', max: 100 },
+            { name: '商场', max: 100 },
+            { name: '火车站', max: 100 },
+            { name: '汽车站', max: 100 },
+            { name: '地铁', max: 100 },
+         ],
+         center:['50%','50%'],  // 调整雷达图位置,
+         radius:'40%',
+         shape: 'circle',
+         splitNumber: 4,
+         axisName: {
+            color: '#4c9bfd',
+            fontSize:9
+         },
+         splitLine: {
+            lineStyle: {
+            color: 'rgba(225,255,255,.5)'
+            }
+         },
+         splitArea: {
+            show: false
+         },
+         axisLine: {
+            lineStyle: {
+            color: 'rgba(225,255,255,.5)'
+            }
+         }
+      },
+      series: [
+         {
+            name: '武汉',
+            type: 'radar',
+            lineStyle: {
+               normal:{
+                  color:'#fff',
+                  width: 1,
+                  opacity: 0.5
+               }
+            },
+            data: [[90,19,56,11,34]],
+             symbol: 'circle', // 雷达图区域做标记(小圆点)
+             symbolSize:5, // 标记小圆点大小
+             itemStyle:{
+              color:'#fff'  // 设置标记小圆点颜色
+             },
+        label:{  
+            show:true,  // 显示小圆点相关数据
+            color:'#fff',  // 设置小圆点数据颜色
+            fontSize:6  // 设置小圆点数据字体大小
+        },
+            areaStyle: {
+             color:'rgba(238,197,102,.6)'  
+            }
+         },
+      ]
+      };
+      option && myChart.setOption(option);
+     },
+     pies(){
+       var myChart = echarts.init(this.$refs.bRight);
+         var option;
+         option = {
+         series: [
+            {
+               name: '统计',
+               type: 'pie',
+               radius: ['70%', '80%'],
+               center: ['50%', '70%'],
+               labelLine: {
+               show: false
+               },
+               startAngle:180,
+               data: [
+                  { value: 100,
+                   itemStyle:{  // 设置颜色渐变 
+                     color: new echarts.graphic.LinearGradient(
+                     0,
+                     0,
+                     0,
+                     1,
+                     [{offset:0,color:'#00c9e0'},{offset:1,color:'#005fc1'}])
+                 } 
+               }, 
+               { value: 100,itemStyle:{color:'#12274d'} }, 
+               { value: 200,itemStyle:{color:'transparent'} }]
+            }
+         ]
+         };
+    option && myChart.setOption(option);
+     }
    }
 }
 </script>
@@ -800,4 +1057,127 @@ window.addEventListener('resize',function(){
        border-radius: 2px;
        background: #ecc615;
     }
+   .content-center .contentCenterright .content-center{
+      height: 90px;
+      position: relative;
+      right: 12px;
+   }
+   .content-center .contentCenterright .content-center .centent{
+      position: absolute;
+      top:-51px;
+      bottom: -20px;
+      right:-38px;
+      left:-132px;
+      padding-top: 10px;
+      padding-left: 38px;
+   }
+   .content-center .contentCenterright .content-center .centent h2 {
+      font-size: 12px;
+      font-weight: normal;
+      letter-spacing: 1px;
+      color:#fff;
+      padding-right: 10px;
+      border-right: 2px solid #56d9f0;
+         }
+   .content-center .contentCenterright .content-center .centent div {
+      display: flex;
+   }
+   .content-center .contentCenterright .content-center .centent section{
+      padding-left: 10px;
+   }
+   .content-center .contentCenterright .content-center .centent section a {
+      display: inline-block;
+      margin-top: 8px;
+      width: 27px;
+      text-align: center;
+      margin-right: 22px;
+      text-decoration: none;
+      color:#526986;
+   }
+   .content-center .contentCenterright .content-center .centent section a:last-of-type{
+      margin-right: 0;  
+   }
+   .content-center .contentCenterright .content-center .centent .text{
+      font-size:12px;
+      color: #526986;
+      position: absolute;
+      z-index: 99;
+   }
+  .content-center .contentCenterright .content-center .centent .bottom{
+      height:97px;
+      margin-right:10px;
+  }
+  .bg{
+     background: #6691ff;
+     color:#fff !important;
+  }
+ .content-center .contentCenterright .content-wrap {
+    position: relative;
+    right:10px;
+    height: 60px;
+ }
+ .content-center .contentCenterright .content-wrap{
+    display: flex;
+ }
+ .content-center .contentCenterright .content-wrap .wrap-left,.wrap-right{
+    position: relative;
+    height: 100%;
+ }
+ .content-center .contentCenterright .content-wrap .wrap-left .wrap,.wrap-right .wrap{
+    position: absolute;
+    top:-45px;
+    right:-38px;
+    left:-132px;
+    bottom: -20px;
+ }
+ .content-center .contentCenterright .content-wrap .wrap-left .wrap h2{
+    position: absolute;
+    top:-5px;
+    left:15px;
+    font-weight: normal;
+    font-size:9px;
+    color:#fff
+ }
+ .content-center .contentCenterright .content-wrap .wrap-left .wrap section{
+    height: 100%;
+ }
+ .content-center .contentCenterright .content-wrap .wrap-right .wrap h3{
+   font-weight: normal;
+   font-size:9px;
+   position: absolute;
+   top:-5px;
+   left:15px;
+   color:#fff;
+ }
+ .content-center .contentCenterright .content-wrap .wrap-right .wrap section {
+    height: 80px;
+    
+ }
+ .content-center .contentCenterright .content-wrap .wrap-right .wrap .flex{
+    display: flex;
+
+ }
+ .content-center .contentCenterright .content-wrap .wrap-right .wrap .bottomLeft{
+    font-size:9px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+    align-items: center;
+ } 
+ .content-center .contentCenterright .content-wrap .wrap-right .wrap .bottomRight{
+    font-size:2px;
+    color:#fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left:35px;
+ }
+ .content-center .contentCenterright .content-wrap .wrap-right .wrap .abs{
+    position: absolute;
+    left:72px;
+    top:43px;
+    font-size:9px;
+    color:#fff;
+ }
 </style>
