@@ -170,6 +170,57 @@
                               </div>
                            </div>
                    </div>
+                   <div class="content-after panel">
+                       <div class="after">
+                          <div class="after-left">
+                               <h3>全国可爱多</h3>
+                               <ul>
+                                  <li>
+                                    <span>1</span>
+                                    <span>可爱多</span>
+                                  </li>
+                                  <li>
+                                    <span>2</span>
+                                    <span>娃哈哈</span>
+                                  </li>
+                                  <li>
+                                    <span>3</span>
+                                    <span>喜之郎</span>
+                                  </li>
+                               </ul>
+                          </div>
+                          <div class="after-right">
+                           <div class="after-right-top">
+                              <h3>各省热销</h3>
+                              <span>//近30日//</span>
+                           </div>
+                           <div class="after-right-content">
+                              <div class="after-right-content-left">
+                                       <ul>
+                                          <li v-for="(item,index) in hotData" :key='index' @mouseenter='mouse(index)' :class="{a:index===hotIndex}">
+                                             <span style="margin-right:10px">{{item.city}}</span>
+                                             <span>{{item.sales}}</span>
+                                             <span style="margin-left:3px"><i :class="item.flag ? 'icon-up' : 'icon-down'" :style="item.flag ? 'color:#da503e' : 'color:#46af9d' "></i></span>
+                                          </li>
+                                       </ul>
+                              </div>
+                              <div class="after-right-content-right">
+                                    <ul>
+                                       <li v-for="(item,index) in hotData" :key="index">
+                                          <div v-for="item in item.brands" :key="item">
+                                           <div v-if="hotIndex===index">  
+                                          <span style="margin-right:10px">{{item.name}}</span>
+                                          <span>{{item.num}}</span>
+                                          <span style="margin-left:3px"><i :class="item.flag ? 'icon-up' : 'icon-down'" :style="item.flag ? 'color:#da503e' : 'color:#46af9d' "></i></span>
+                                          </div>
+                                          </div>
+                                       </li>
+                                    </ul>
+                              </div>
+                           </div>
+                          </div>
+                       </div>
+                   </div>
                </section>
        </div>
     </div> 
@@ -346,6 +397,74 @@ export default {
       b:[32, 54, 34, 87, 32, 45, 62, 68, 93, 54, 54, 24]
       },
        ],
+        hotData:[
+         {
+        city: '北京',  // 城市
+        sales: '25, 179',  // 销售额
+        flag: true, //  上升还是下降
+        brands: [   //  品牌种类数据
+          { name: '可爱多', num: '9,086', flag: true },
+          { name: '娃哈哈', num: '8,341', flag: true },
+          { name: '喜之郎', num: '7,407', flag: false },
+          { name: '八喜', num: '6,080', flag: false },
+          { name: '小洋人', num: '6,724', flag: false },
+          { name: '好多鱼', num: '2,170', flag: true },
+        ]
+      },
+      {
+        city: '河北',
+        sales: '23,252',
+        flag: false,
+        brands: [
+          { name: '可爱多', num: '3,457', flag: false },
+          { name: '娃哈哈', num: '2,124', flag: true },
+          { name: '喜之郎', num: '8,907', flag: false },
+          { name: '八喜', num: '6,080', flag: true },
+          { name: '小洋人', num: '1,724', flag: false },
+          { name: '好多鱼', num: '1,170', flag: false },
+        ]
+      },
+      {
+        city: '上海',
+        sales: '20,760',
+        flag: true,
+        brands: [
+          { name: '可爱多', num: '2,345', flag: true },
+          { name: '娃哈哈', num: '7,109', flag: true },
+          { name: '喜之郎', num: '3,701', flag: false },
+          { name: '八喜', num: '6,080', flag: false },
+          { name: '小洋人', num: '2,724', flag: false },
+          { name: '好多鱼', num: '2,998', flag: true },
+        ]
+      },
+      {
+        city: '江苏',
+        sales: '23,252',
+        flag: false,
+        brands: [
+          { name: '可爱多', num: '2,156', flag: false },
+          { name: '娃哈哈', num: '2,456', flag: true },
+          { name: '喜之郎', num: '9,737', flag: true },
+          { name: '八喜', num: '2,080', flag: true },
+          { name: '小洋人', num: '8,724', flag: true },
+          { name: '好多鱼', num: '1,770', flag: false },
+        ]
+      },
+       {
+        city: '山东',
+        sales: '20,760',
+        flag: true,
+        brands: [
+          { name: '可爱多', num: '9,567', flag: true },
+          { name: '娃哈哈', num: '2,345', flag: false },
+          { name: '喜之郎', num: '9,037', flag: false },
+          { name: '八喜', num: '1,080', flag: true },
+          { name: '小洋人', num: '4,724', flag: false },
+          { name: '好多鱼', num: '9,999', flag: true },
+        ]
+      }
+    ],
+    hotIndex:0,
       }
    },
    mounted(){
@@ -356,7 +475,8 @@ export default {
       this.cate(),
       this.time(),
       this.radar(),
-      this.pies()
+      this.pies(),
+      this.set()
    },
    computed:{
       
@@ -724,6 +844,17 @@ window.addEventListener('resize',function(){
          ]
          };
     option && myChart.setOption(option);
+     },
+     mouse(index){
+        this.hotIndex = index
+     },
+     set(){
+        setInterval(()=>{
+          if(this.hotIndex===4){
+             return this.hotIndex = 0
+          }
+          this.hotIndex++;
+        },1000)
      }
    }
 }
@@ -1180,4 +1311,96 @@ window.addEventListener('resize',function(){
     font-size:9px;
     color:#fff;
  }
+.content-center .contentCenterright .content-after {
+   margin-top: 80px;
+   height: 75px;
+   position: relative;
+   right: 10px;
+}
+.content-center .contentCenterright .content-after .after {
+   position: absolute;
+   top: -51px;
+   right: -38px;
+   left: -132px;
+   bottom: -20px;
+   padding:10px;
+   display: flex;
+}
+.content-center .contentCenterright .content-after .after .after-left {
+   width:120px;
+   height: 100%;
+   text-align: center;
+}
+.content-center .contentCenterright .content-after .after .after-left h3 {
+   font-size:15px;
+   font-weight: 600;
+   color:#fff;
+   text-align: left;
+   margin-left:20px;
+   margin-bottom: 7px;
+   margin-top: 0;
+}
+.content-center .contentCenterright .content-after .after .after-left ul {
+   list-style: none;
+   margin:0;
+   padding:0;
+   color:#7291ff
+}
+.content-center .contentCenterright .content-after .after .after-left ul li {
+  line-height: 29px;
+}
+.content-center .contentCenterright .content-after .after .after-left ul span:nth-of-type(1){
+   margin-right:15px
+}
+.content-center .contentCenterright .content-after .after .after-right{
+   flex: 1;
+}
+.content-center .contentCenterright .content-after .after .after-right-top {
+   display: flex;
+   justify-content: space-around;
+}
+.content-center .contentCenterright .content-after .after .after-right-top h3{
+  color:#fff;
+  font-size: 15px;
+  margin:0;
+  margin-bottom: 10px;
+  margin-left:-15px
+}
+.content-center .contentCenterright .content-after .after .after-right-top span{
+   color:#479ce7;
+   font-size: 12px;
+}
+.content-center .contentCenterright .content-after .after .after-right-content-left ul{
+   list-style: none;
+   margin:0;
+   padding:0;
+   margin-top:-10px;
+   padding-left:15px;
+}
+.content-center .contentCenterright .content-after .after .after-right-content{
+   display: flex;
+}
+.content-center .contentCenterright .content-after .after .after-right-content-left ul li span{
+   font-size:10px;
+   color:#617cd2;
+   cursor: pointer;
+}
+.content-center .contentCenterright .content-after .after .after-right-content-left ul li:hover{
+   background: #040c2c;
+}
+.content-center .contentCenterright .content-after .after .after-right-content-right ul{
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   margin-top:-6px;
+   padding-left:10px;
+   background: #040c2c;
+}
+.content-center .contentCenterright .content-after .after .after-right-content-right ul li {
+   font-size:10px;
+   color:#617cd2
+}
+.a{
+   background: #040c2c;
+}
 </style>
